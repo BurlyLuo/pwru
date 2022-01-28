@@ -3,7 +3,7 @@
 ![logo](logo.png "Detective Gopher is looking for packet traces left by eBPF bee")
 
 `pwru` is an [eBPF](https://ebpf.io)-based tool for tracing network packets in
-the Linux kernel with advanced filtering capabilities. It allows fine-grained 
+the Linux kernel with advanced filtering capabilities. It allows fine-grained
 introspection of kernel state to facilitate debugging network connectivity issues.
 
 The following example shows where the packets of a `curl` request are dropped
@@ -30,8 +30,7 @@ above example with the following commands.
 3. Build `pwru`:
    ```console
    $ cd /pwru
-   $ go generate
-   $ go build
+   $ make
    ```
 
 4. Run `pwru`:
@@ -96,7 +95,7 @@ the eBPF bytecode from the [release page](https://github.com/cilium/pwru/release
 Usage of ./pwru:
       --filter-dst-ip string        filter destination IP addr
       --filter-dst-port uint16      filter destination port
-      --filter-func string          filter the kernel functions that can be probed; the filter can be a regular expression (RE2)
+      --filter-func string          filter kernel functions to be probed by name (exact match, supports RE2 regular expression)
       --filter-mark uint32          filter skb mark
       --filter-netns uint32         filter netns inode
       --filter-proto string         filter L4 protocol (tcp, udp, icmp)
@@ -113,6 +112,10 @@ Usage of ./pwru:
 If multiple filters are specified, all of them have to match in order for a
 packet to be traced.
 
+The `--filter-func` switch does an exact match on function names i.e.
+`--filter-func=foo` only matches `foo()`; for a wildcarded match, try
+`--filter-func=".*foo.*"` instead.
+
 ## Developing
 
 ### Dependencies
@@ -123,8 +126,7 @@ packet to be traced.
 ### Building
 
 ```
-go generate .
-go build .
+make
 ```
 
 Alternatively, you can build and run in the Docker container:

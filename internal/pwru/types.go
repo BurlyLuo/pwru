@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: GPL-2.0-only
 /* Copyright (C) 2020-2021 Martynas Pumputis */
-/* Copyright (C) 2021 Authors of Cilium */
+/* Copyright (C) 2021-2022 Authors of Cilium */
 
 package pwru
 
@@ -13,6 +13,8 @@ const (
 )
 
 type Flags struct {
+	ShowVersion bool
+
 	FilterNetns   uint32
 	FilterMark    uint32
 	FilterFunc    string
@@ -31,7 +33,8 @@ type Flags struct {
 }
 
 func (f *Flags) SetFlags() {
-	flag.StringVar(&f.FilterFunc, "filter-func", "", "filter the kernel functions that can be probed; the filter can be a regular expression (RE2)")
+	flag.BoolVar(&f.ShowVersion, "version", false, "show pwru version and exit")
+	flag.StringVar(&f.FilterFunc, "filter-func", "", "filter kernel functions to be probed by name (exact match, supports RE2 regular expression)")
 	flag.StringVar(&f.FilterProto, "filter-proto", "", "filter L4 protocol (tcp, udp, icmp, icmp6)")
 	flag.StringVar(&f.FilterSrcIP, "filter-src-ip", "", "filter source IP addr")
 	flag.StringVar(&f.FilterDstIP, "filter-dst-ip", "", "filter destination IP addr")
@@ -77,7 +80,6 @@ type Event struct {
 	Addr         uint64
 	SAddr        uint64
 	Timestamp    uint64
-	CPU          uint32
 	PrintSkbId   uint64
 	Meta         Meta
 	Tuple        Tuple
