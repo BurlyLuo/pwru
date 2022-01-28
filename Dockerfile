@@ -11,7 +11,8 @@ RUN apt install -y llvm-12 clang-12
 RUN ln -s /usr/bin/clang-12 /usr/bin/clang
 WORKDIR /pwru
 COPY . .
-RUN make
+RUN go generate .
+RUN go build .
 RUN chmod a+x /pwru
 ENTRYPOINT ["./pwru"]
 CMD ["./pwru", "-output-tuple"]
