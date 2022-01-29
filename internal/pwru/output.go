@@ -10,10 +10,9 @@ import (
 	"runtime"
 	"syscall"
 
+	"github.com/cilium/cilium/pkg/byteorder"
 	"github.com/cilium/ebpf"
 	ps "github.com/mitchellh/go-ps"
-
-	"github.com/cilium/pwru/internal/byteorder"
 )
 
 type output struct {
@@ -35,7 +34,7 @@ func NewOutput(flags *Flags, printSkbMap *ebpf.Map, printStackMap *ebpf.Map, add
 }
 
 func (o *output) PrintHeader() {
-	fmt.Printf("%18s %16s %24s %16s\n", "SKB", "PROCESS", "FUNC", "TIMESTAMP")
+	fmt.Printf("%18s %16s %24s %8s %16s\n", "SKB", "PROCESS", "FUNC", "CPU", "TIMESTAMP")
 }
 
 func (o *output) Print(event *Event) {
@@ -66,7 +65,7 @@ func (o *output) Print(event *Event) {
 	} else {
 		funcName = fmt.Sprintf("0x%x", addr)
 	}
-	fmt.Printf("%18s %16s %24s %16d", fmt.Sprintf("0x%x", event.SAddr), fmt.Sprintf("[%s]", execName), funcName, ts)
+	fmt.Printf("%18s %16s %24s %8d %16d", fmt.Sprintf("0x%x", event.SAddr), fmt.Sprintf("[%s]", execName), funcName, event.CPU, ts)
 	o.lastSeenSkb[event.SAddr] = event.Timestamp
 
 	if o.flags.OutputMeta {

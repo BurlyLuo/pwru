@@ -6,8 +6,6 @@
 
 package byteorder
 
-import "encoding/binary"
-
 var Native binary.ByteOrder = binary.BigEndian
 
 func HostToNetwork16(u uint16) uint16 { return u }
